@@ -81,7 +81,7 @@ class Meter(tk.Canvas):
         ,self.centrey - 3*self.blobrad
         ,fill = 'red'
         ,font = tkf.Font(size = -int(2*self.majortick)))
-        self.create_text( self.centrex, self.centrey+(3*self.blobrad), text="Speed (m/s)")
+        self.create_text( self.centrex, self.centrey+(3*self.blobrad), text="Speed (mph)")
         
         
         # create moving and changeable bits
