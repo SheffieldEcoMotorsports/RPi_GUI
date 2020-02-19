@@ -2,32 +2,56 @@
 
 import tkinter as tk
 from tkinter import *
+import time
+import datetime
+import math
+
+def secToFormat(timeChange):
+    #Format seconds to min/sec/millisec
+    milliChange = str((timeChange%1) * 100)[:2]#first 2 digits of milli
+    #This is needed because sometimes it will be a single digit so it has a '.'
+    if "." in milliChange:
+        milliChange = milliChange[0]
+    #Round down
+    intTimeChange = math.floor(timeChange)
+    #means it wont go over 60 eg 67 -> 7, 40 -> 40 etc
+    secChange = str(intTimeChange%60)
+    #Integer division so it is in whole minutes eg 130 -> 2
+    minChange = str(intTimeChange//60)
+    #Format so always 2 digits eg 04 not 4
+    if int(milliChange) < 10:
+        milliChange = ":0" + milliChange
+    else:
+        milliChange = ":" + milliChange
+    if int(secChange) < 10:
+        secChange = ":0" + secChange
+    else:
+        secChange = ":" + secChange
+    if int(minChange) < 10:
+        minChange = "0" + minChange
+
+    FulltimeString = minChange + secChange + milliChange
+    return FulltimeString
+
 
 class Timer:
     def __init__(self, mainWin):
         self.state = False
-        self.timer = [0, 0, 0]
-        self.timer2= [0, 0, 0]
+        self.startTime = 0
         self.lap_value = 0
-        self.pattern =  '{0:02d}:{1:02d}:{2:02d}'
+        self.lapTime = 0
 
-        self.tkCanvas = tk.Canvas(mainWin, width=150, height=30)
+        self.tkCanvas = tk.Canvas(mainWin, width=300, height=100 )
 
 
-        self.B = tk.Button(text="Start timer", command= lambda:[self.start(), self.update_timeText()], activebackground='green')
-        self.B.place(relx = 0.73, rely = 0.3, anchor = CENTER)
+        self.B = tk.Button(self.tkCanvas, text="Start timer", command= lambda:[self.start(), self.update_timeText()], activebackground='green')
+        self.B.place(x=140, y=0)
 
-        self.timeText = tk.Label(text="00:00:00", font=("Helvetica", 25), bg='lightgray')
-        self.timeText.place(relx = 0.6, rely = 0.3, anchor = CENTER)
+        self.timeText = tk.Label(self.tkCanvas, text="00:00:00", font=("Helvetica", 25), bg='lightgray')
+        self.timeText.place(x=0, y=0)
 
-        #self.pauseButton = tk.Button(text = 'Pause', command = self.pause, activebackground='yellow')
-        #self.pauseButton.grid(row=0,column=4)
-
-        #self.resetButton = tk.Button(text = 'Reset', command = self.reset, activebackground='red')
-        #self.resetButton.grid(row=0, column=5)
-
-        self.globaltimeText = tk.Label(text= "00:00:00", font=("Helvetica", 25), bg='grey')
-        self.globaltimeText.place(relx = 0.6, rely = 0.35, anchor = CENTER)
+        self.globaltimeText = tk.Label(self.tkCanvas, text= "00:00:00", font=("Helvetica", 25), bg='grey')
+        self.globaltimeText.place(x=0, y=50)
 
 
 
@@ -35,11 +59,11 @@ class Timer:
 
         # Lap incrementing
 
-        self.lap_value_label = tk.Label (text = self.lap_value, font=("Helvetica", 25), bg='lightgray')
-        self.lap_value_label.place(relx = 0.8, rely = 0.3, anchor = CENTER)
+        self.lap_value_label = tk.Label (self.tkCanvas, text = "Laps: 0", font=("Helvetica", 25), bg='lightgray')
+        self.lap_value_label.place(x=150, y=28)
 
-        self.lap_button = tk.Button(text= 'Increase Lap', command = self.increase, activebackground='gray')
-        self.lap_button.place(relx = 0.87, rely = 0.3, anchor = CENTER)
+        self.lap_button = tk.Button(self.tkCanvas, text= 'Increase Lap', command = self.increase, activebackground='gray')
+        self.lap_button.place(x=140, y=70)
 
 
 
@@ -48,50 +72,33 @@ class Timer:
 
     def increase(self):
         self.lap_value += 1
-        self.lap_value_label.configure(text= self.lap_value)
+        lapText = "Laps: " + str(self.lap_value)
+        self.lap_value_label.configure(text=lapText)
         self.reset()
         ###
 
     def update_timeText(self):
         if self.state:
-            # Every time this function is called, we will increment 1 centisecond (1/100 of a second)
-            self.timer[2] += 1
-            self.timer2[2] += 1
-            # Every 100 centisecond is equal to 1 second
+            #Store time so both timers are in sync
+            currentTime = time.time()
 
-            if self.timer[2] >= 100:
-                self.timer[2] = 0
-                self.timer[1] += 1
-            if self.timer2[2] >= 100:
-                self.timer2[2] = 0
-                self.timer2[1] += 1
-            # Every 60 seconds is equal to 1 min
-            if self.timer[1] >= 60:
-                self.timer[0] += 1
-                self.timer[1] = 0
-            if self.timer2[1] >= 60:
-                self.timer2[0] += 1
-                self.timer2[1] = 0
-            # We create our time string here
-            self.timeString = self.pattern.format(self.timer[0], self.timer[1], self.timer[2])
-            self.timeString2 = self.pattern.format(self.timer2[0], self.timer2[1], self.timer2[2])
-            # Update the timeText Label box with the current time
-            self.timeText.configure(text=self.timeString)
-            self.globaltimeText.configure(text=self.timeString2)
-            # Call the update_timeText() function after 1 centisecond
-        self.timeText.after(10, self.update_timeText)
+            #Time is the difference between now and when it started
+            timeChange = currentTime - self.lapTime
+            self.timeText.configure( text=secToFormat(timeChange) )
+            
+            timeChange = currentTime - self.startTime
+            self.globaltimeText.configure( text=secToFormat(timeChange) )
+
     def start(self):
         self.state = True
+        self.startTime = time.time()
+        self.lapTime = self.startTime
 
-    # To pause the timer
-    def pause(self):
-        self.state = False
-
-    # To reset the timer to 00:00:00
     def reset(self):
-        self.timer = [0, 0, 0]
+        #Set lap time to the current time
+        self.lapTime = time.time()
         self.timeText.configure(text='00:00:00')
 
-    def grid(self, rowIn, columnIn):
-        # Calls the tk grid function
-        self.tkCanvas.grid(row=rowIn, column=columnIn)
+    def place(self, xIn, yIn):
+        # Calls the tk place function
+        self.tkCanvas.place(x=xIn, y=yIn)
