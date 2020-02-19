@@ -3,10 +3,13 @@
 import tkinter as tk
 import barGaugeCode
 import meterGaugeCode
+import timerCode
 
 def updateGauges(gauges, newVals, UPDATERATE, mainWin):
-    for i in range(len(gauges)):
-        gauges[i].setVal(newVals[i])
+    gauges[0].setVal(newVals[0])
+    gauges[1].setVal(newVals[1])
+    gauges[2].update_timeText()
+    
     ###
     #Insert sensor functions here
     ###
@@ -21,16 +24,20 @@ def updateGauges(gauges, newVals, UPDATERATE, mainWin):
 mainWin = tk.Tk()
 mainWin.title("Test Win")
 mainWin.geometry("800x800")
-WINW = 800
-WINH = 800
+#WINW = 800
+#WINH = 800
 UPDATERATE = 100#ms
+STARTVALS = [100, 0]
 
 gauges = [barGaugeCode.barGauge(mainWin),
-          meterGaugeCode.Meter(mainWin, height=300, width=300)]
+          meterGaugeCode.Meter(mainWin, height=300, width=300),
+          timerCode.Timer(mainWin)
+          ]
+#Initialise gauges
+gauges[0].place(10, 320)
+gauges[1].setrange(0, 15)
+gauges[1].place(x=10, y=10)
+gauges[2].place(400,200)
 
-gauges[0].grid(0, 0)
-gauges[1].setrange(0, 30)
-gauges[1].grid(row=0, column=1)
-
-mainWin.after(UPDATERATE, lambda: updateGauges(gauges, [100, 0], UPDATERATE, mainWin))
+mainWin.after(UPDATERATE, lambda: updateGauges(gauges, STARTVALS, UPDATERATE, mainWin))
 mainWin.mainloop()
