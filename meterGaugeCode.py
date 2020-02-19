@@ -19,7 +19,6 @@ class Meter(tk.Canvas):
         self.layoutparams()
         self.graphics()
         self.createhand()
-        
         self.setrange()
         
     def layoutparams(self):
@@ -81,7 +80,7 @@ class Meter(tk.Canvas):
         ,self.centrey - 3*self.blobrad
         ,fill = 'red'
         ,font = tkf.Font(size = -int(2*self.majortick)))
-        self.create_text( self.centrex, self.centrey+(3*self.blobrad), text="Speed (mph)")
+        self.create_text( self.centrex, self.centrey+(3*self.blobrad), text="Speed (m/s)")
         
         
         # create moving and changeable bits
