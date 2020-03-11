@@ -1,9 +1,8 @@
 # Code for timer
 
 import tkinter as tk
-from tkinter import *
 import time
-import datetime
+
 import math
 
 def secToFormat(timeChange):
@@ -41,7 +40,7 @@ class Timer:
         self.lap_value = 0
         self.lapTime = 0
 
-        self.tkCanvas = tk.Canvas(mainWin, width=300, height=100 )
+        self.tkCanvas = tk.Canvas(mainWin, width=300, height=100, bg='#0c0824',highlightthickness=0)
 
 
         self.B = tk.Button(self.tkCanvas, text="Start timer", command= lambda:[self.start(), self.update_timeText()], activebackground='green')
@@ -60,7 +59,7 @@ class Timer:
         # Lap incrementing
 
         self.lap_value_label = tk.Label (self.tkCanvas, text = "Laps: 0", font=("Helvetica", 25), bg='lightgray')
-        self.lap_value_label.place(x=150, y=28)
+        self.lap_value_label.place(x=140, y=25)
 
         self.lap_button = tk.Button(self.tkCanvas, text= 'Increase Lap', command = self.increase, activebackground='gray')
         self.lap_button.place(x=140, y=70)
