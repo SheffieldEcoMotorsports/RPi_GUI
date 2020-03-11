@@ -16,14 +16,15 @@ def updateGauges(gauges, newVals, UPDATERATE, mainWin):
     
     ###
     #EG - TBD
-    newVals[0] -= 2
+    newVals[0] -= 1
     newVals[1] += 0.5
     ###
     mainWin.after(UPDATERATE, lambda: updateGauges(gauges, newVals, UPDATERATE, mainWin))
 
 mainWin = tk.Tk()
 mainWin.title("Test Win")
-mainWin.geometry("800x800")
+mainWin.geometry("800x480")
+mainWin.configure(bg='#0c0824')
 #WINW = 800
 #WINH = 800
 UPDATERATE = 100#ms
@@ -34,10 +35,10 @@ gauges = [barGaugeCode.barGauge(mainWin),
           timerCode.Timer(mainWin)
           ]
 #Initialise gauges
-gauges[0].place(10, 320)
+gauges[0].place(130, 320)
 gauges[1].setrange(0, 15)
-gauges[1].place(x=10, y=10)
-gauges[2].place(400,200)
+gauges[1].place(x=225, y=10)
+gauges[2].place(535,125)
 
 mainWin.after(UPDATERATE, lambda: updateGauges(gauges, STARTVALS, UPDATERATE, mainWin))
 mainWin.mainloop()
