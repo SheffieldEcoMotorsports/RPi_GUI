@@ -10,7 +10,7 @@ class barGauge():
         self.MAXVAL = 100  #Highest value on the gauge
         
         #Creates the tk objects
-        self.tkCanvas = tk.Canvas(mainWin, width=self.GAUGEW+10, height=self.GAUGEH)
+        self.tkCanvas = tk.Canvas(mainWin, width=self.GAUGEW, height=self.GAUGEH)
         #self.tkCanvas.pack()
         
         #Actual varying rectangle
