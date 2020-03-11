@@ -14,17 +14,18 @@ import math
 
 class Meter(tk.Canvas):
     def __init__(self,master,*args,**kwargs):
-        tk.Canvas.__init__(self,master,*args,**kwargs)
+        tk.Canvas.__init__(self,master,*args,**kwargs, bg='#0c0824', highlightthickness=0)
         
         self.layoutparams()
         self.graphics()
         self.createhand()
         self.setrange()
         
+        
     def layoutparams(self):
         # set parameters that control the layout
-        height = int(self['height'])
-        width = int(self['width'])
+        height = int(self['height']) 
+        width = int(self['width']) 
         
         # find a square that fits in the window
         if(height*2 > width):
@@ -60,7 +61,7 @@ class Meter(tk.Canvas):
         ,self.centrex+self.radius
         ,self.centrey+self.radius
         ,width = self.bezel
-        ,outline = self.bezelcolour2)
+        ,outline = self.bezelcolour2, fill='white')
         
         self.create_oval(self.centrex-self.radius - self.bezel
         ,self.centrey-self.radius - self.bezel
@@ -124,4 +125,4 @@ class Meter(tk.Canvas):
         
     def blob(self,colour):
         # call this to change the colour of the blob
-        self.itemconfigure(self.blobid,fill = colour,outline = colour)
+        self.itemconfigure(self.blobid,fill = 'black',outline = 'black')
